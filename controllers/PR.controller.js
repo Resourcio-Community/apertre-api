@@ -1,7 +1,8 @@
-const axios = require('axios')
+import axios from 'axios'
+import dotenv from 'dotenv'
 const repos = require('../data/allRepos.json')
 
-require('dotenv').config()
+dotenv.config()
 
 const ACCESS_TOKEN = process.env.GH_ACCESS_TOKEN
 

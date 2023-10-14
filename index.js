@@ -1,12 +1,13 @@
-const express = require('express')
-const cors = require('cors')
-const morgan = require('morgan')
-const mongoose = require('mongoose')
-const connectDB = require('./db/connect')
+import express from 'express'
+import cors from 'cors'
+import morgan from 'morgan'
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
-const PRroute = require('./router/PR.route')
+import { connectDB } from './db/connect.js'
+import { PRroute } from './router/PR.route.js'
 
-require('dotenv').config()
+dotenv.config()
 
 const app = express()
 
@@ -16,7 +17,8 @@ app.use(express.json())
 app.use(morgan('tiny'))
 
 
-app.use('/api/v1', PRroute)
+app.use('/api/v1/register', PRroute)
+app.use('/api/v1/pr', PRroute)
 
 
 const port = process.env.PORT || 3000

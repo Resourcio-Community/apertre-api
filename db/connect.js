@@ -1,9 +1,11 @@
-const mongoose = require('mongoose')
-require('dotenv').config()
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const MONGODB_URL = process.env.MONGODB_URL
 
-module.exports = async function connectDB() {
+export async function connectDB() {
     try {
         const conn = await mongoose.connect(MONGODB_URL, {
             useNewUrlParser: true,
