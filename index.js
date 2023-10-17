@@ -6,6 +6,8 @@ import dotenv from 'dotenv'
 
 import { connectDB } from './db/connect.js'
 import { PRroute } from './router/PR.route.js'
+import { mentorRoute } from './router/mentor.route.js'
+import { menteeRoute } from './router/mentee.route.js'
 
 dotenv.config()
 
@@ -17,7 +19,8 @@ app.use(express.json())
 app.use(morgan('tiny'))
 
 
-app.use('/api/v1/register', PRroute)
+app.use('/api/v1/mentor', mentorRoute)
+app.use('/api/v1/mentee', menteeRoute)
 app.use('/api/v1/pr', PRroute)
 
 
