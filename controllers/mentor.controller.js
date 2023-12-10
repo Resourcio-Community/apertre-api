@@ -10,7 +10,12 @@ export const addMentor = async (req, res) => {
         // Checking if the email already exists in mentee's collection
         const existingMentee = await Mentee.findOne({ email: details.email })
         if (existingMentee)
-            return res.status(409).json(Response({ isSuccess: false, message: 'You have already registered as a Mentee' }))
+            return res.status(409).json(
+                Response({
+                    isSuccess: false,
+                    message: 'You have already registered as a Mentee'
+                })
+            )
 
         // Creating a new mentor
         await Mentor.create(details)
@@ -23,11 +28,14 @@ export const addMentor = async (req, res) => {
                 message: 'You have been registered successfully as a mentor, please check your email(also spam)'
             })
         )
-    } catch (error) {
-        console.log(error)
-        return res
-            .status(500)
-            .json(Response({ isSuccess: false, message: 'Something went wrong, please try again' }))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json(
+            Response({
+                isSuccess: false,
+                message: 'Something went wrong, please try again'
+            })
+        )
     }
 }
 
@@ -41,9 +49,14 @@ export const getMentors = async (req, res) => {
                 data: mentors
             })
         )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(Response({ isSuccess: false, message: 'Something went wrong' }))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json(
+            Response({
+                isSuccess: false,
+                message: 'Something went wrong'
+            })
+        )
     }
 }
 
@@ -58,8 +71,13 @@ export const getMentor = async (req, res) => {
                 data: mentor
             })
         )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(Response({ isSuccess: false, message: 'Something went wrong' }))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json(
+            Response({
+                isSuccess: false,
+                message: 'Something went wrong'
+            })
+        )
     }
 }

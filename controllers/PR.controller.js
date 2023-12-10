@@ -49,10 +49,10 @@ const fetchAllData = async () => {
         }
     }
 
-    writeJson({
-        lastUpdated: new Date(),
-        data: leaderboardData
-    })
+    // writeJson({
+    //     lastUpdated: new Date(),
+    //     data: leaderboardData
+    // })
 }
 
 const getDatafromDB = async (userName) => {

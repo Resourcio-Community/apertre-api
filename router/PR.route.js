@@ -6,4 +6,4 @@ router.get('/', (req, res) => {
     res.status(200).json('PR Route')
 })
 
-export { router as PRroute }
+export { router as prRoute }

@@ -1,5 +1,6 @@
 import Mentee from "../db/models/Mentee.js"
 import Mentor from "../db/models/Mentor.js"
+import { Response } from "../utils/Response.js"
 import { sendMail } from "../utils/mail.js"
 
 export const addMentee = async (req, res) => {
@@ -8,16 +9,22 @@ export const addMentee = async (req, res) => {
         // Checking if the email already exists in mentee's collection
         const existingMentee = await Mentee.findOne({ email: details.email })
         if (existingMentee)
-            return res
-                .status(409)
-                .json(Response({ isSuccess: false, message: 'You have already registered as a Mentee' }))
+            return res.status(409).json(
+                Response({
+                    isSuccess: false,
+                    message: 'You have already registered as a Mentee'
+                })
+            )
 
         // Checking if the email already exists in mentor's collection
         const existingMentor = await Mentor.findOne({ email: details.email })
         if (existingMentor)
-            return res
-                .status(409)
-                .json(Response({ isSuccess: false, message: 'You have already registered as a Mentor' }))
+            return res.status(409).json(
+                Response({
+                    isSuccess: false,
+                    message: 'You have already registered as a Mentor'
+                })
+            )
 
         // Creating a new mentee
         await Mentee.create(details)
@@ -30,9 +37,14 @@ export const addMentee = async (req, res) => {
                 message: 'You have been registered successfully as a mentee! Please check your email(also spam)',
             })
         )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(Response({ isSuccess: false, message: 'Something went wrong' }))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json(
+            Response({
+                isSuccess: false,
+                message: 'Something went wrong'
+            })
+        )
     }
 }
 
@@ -46,9 +58,14 @@ export const getMentees = async (req, res) => {
                 data: mentees
             })
         )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(Response({ isSuccess: false, message: 'Something went wrong' }))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json(
+            Response({
+                isSuccess: false,
+                message: 'Something went wrong'
+            })
+        )
     }
 }
 
@@ -63,8 +80,13 @@ export const getMentee = async (req, res) => {
                 data: mentee
             })
         )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(Response({ isSuccess: false, message: 'Something went wrong' }))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json(
+            Response({
+                isSuccess: false,
+                message: 'Something went wrong'
+            })
+        )
     }
 }
