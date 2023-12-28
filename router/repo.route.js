@@ -3,7 +3,7 @@ import { getRepos, getUniqueTechStacks } from '../controllers/repo.controller.js
 
 const router = Router()
 
-router.get('/getrepos', getRepos)
-router.get('/gettags', getUniqueTechStacks)
+router.route('/getrepos').get(getRepos)
+router.route('/gettags').get(getUniqueTechStacks)
 
 export { router as repoRoute }

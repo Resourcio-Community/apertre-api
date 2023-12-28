@@ -4,8 +4,8 @@ import { addMentee, getMentee, getMentees } from '../controllers/mentee.controll
 
 const router = Router()
 
-router.get('/', isAdmin, getMentees)
-router.get('/:email', isAdmin, getMentee)
-router.post('/', addMentee)
+router.route('/').get(isAdmin, getMentees)
+router.route('/:email').get(isAdmin, getMentee)
+router.route('/').post(addMentee)
 
 export { router as menteeRoute }

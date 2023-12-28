@@ -19,16 +19,8 @@ const menteeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    whatsapp: {
+    collegeOrOrg: {
         type: String,
-        required: true
-    },
-    college: {
-        type: String,
-        required: true
-    },
-    year: {
-        type: Number,
         required: true
     },
     github: {

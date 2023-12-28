@@ -50,7 +50,7 @@ export const addMentee = async (req, res) => {
 
 export const getMentees = async (req, res) => {
     try {
-        const mentees = await Mentee.find().sort({ _id: -1 })
+        const mentees = await Mentee.find().select('-question')
         return res.status(200).json(
             Response({
                 isSuccess: true,

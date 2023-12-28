@@ -4,8 +4,8 @@ import { addMentor, getMentor, getMentors } from '../controllers/mentor.controll
 
 const router = Router()
 
-router.get('/', isAdmin, getMentors)
-router.get('/:email', isAdmin, getMentor)
-router.post('/', addMentor)
+router.route('/').get(isAdmin, getMentors)
+router.route('/:email').get(isAdmin, getMentor)
+router.post('/').route(addMentor)
 
 export { router as mentorRoute }
