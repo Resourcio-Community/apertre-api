@@ -1,9 +1,8 @@
 import { Router } from 'express'
+import { fetchAllData } from '../controllers/PR.controller.js'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-    res.status(200).json('PR Route')
-})
+router.route('/').get(fetchAllData)
 
 export { router as prRoute }

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import dotenv from 'dotenv'
-const repos = require('../data/allRepos.json')
+import { Response } from '../utils/Response.js'
+import { repos } from '../data/allRepos.js'
+import Mentee from '../db/models/Mentee.js'
 
 dotenv.config()
 
@@ -8,13 +10,15 @@ const ACCESS_TOKEN = process.env.GH_ACCESS_TOKEN
 
 const eventLabel = "apertre"
 const levelsData = {
-    easy: "Easy",
-    medium: "Medium",
-    hard: "Hard"
+    easy: "Easy", // 5
+    medium: "Medium", // 10
+    hard: "Hard" // 15
 }
 let finalData = []
 
-const fetchAllData = async () => {
+
+
+export const fetchAllData = async (req, res, next) => {
     for (let i = 0; i < repos.length; i++) {
         const repoName = repos[i]
         const data = await fetchRepoData(repoName)
@@ -31,10 +35,9 @@ const fetchAllData = async () => {
     for (let pos = 0; pos < leaderboardData.length; pos++) {
         const currentData = leaderboardData[pos]
 
-        const { full_name, college } = await getDatafromDB(currentData.user_name);
+        const { full_name } = await getDatafromDB(currentData.user_name);
 
         currentData.full_name = full_name
-        currentData.college = college
 
         if (pos === 0) {
             currentData.rank = rank
@@ -49,30 +52,34 @@ const fetchAllData = async () => {
         }
     }
 
-    // writeJson({
-    //     lastUpdated: new Date(),
-    //     data: leaderboardData
-    // })
+    return res.status(200).json(
+        Response({
+            isSuccess: true,
+            message: "Leaderboard Updated.",
+            data: {
+                lastUpdated: new Date(),
+                leaderboardData
+            }
+        })
+    )
 }
 
+
 const getDatafromDB = async (userName) => {
-    let finalData = { full_name: '', college: '' }
+    let finalData = { full_name: '' }
     try {
-        const db = client.db("apertreDB")
-        const collection = db.collection("mentees")
-        const data = await collection.findOne({ $text: { $search: userName } })
+        const data = await Mentee.findOne({ github: `https://github.com/${userName}` })
         if (data) {
             finalData.full_name = data.name
-            finalData.college = data.college
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 
     return finalData
 }
 
-let counter = 0
+let counter = 1
 
 const fetchRepoData = async (repoName) => {
     let pageCount = 1
@@ -93,7 +100,6 @@ const fetchRepoData = async (repoName) => {
             })
 
             console.log(`Data has been fetched for: ${repoName} and pageCount: ${pageCount}`)
-            console.log("_____________")
 
             if (data.length !== 0) {
                 const apertreData = filterApertre(data)
@@ -103,7 +109,7 @@ const fetchRepoData = async (repoName) => {
                 pageAvailabe = false
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
             pageAvailabe = false
             process.exit(1)
         }
@@ -136,8 +142,7 @@ const filterApertre = (allData) => {
                 avatar_url: prData.user.avatar_url,
                 user_url: prData.user.html_url,
                 pr_url: prData.html_url,
-                labels: prData.labels.map((labelData) => labelData.name),
-                phase: getPhase(prData.created_at)
+                labels: prData.labels.map((labelData) => labelData.name)
             }
             finalData = [...finalData, data]
         })
@@ -146,15 +151,6 @@ const filterApertre = (allData) => {
     return finalData
 }
 
-// Check deadline later
-const getPhase = (created_at) => {
-    const phasedeadlineISO = '' // To be set later in ISO format
-    const deadline = new Date(phasedeadlineISO)
-    const createdAtDate = new Date(created_at)
-
-    if (createdAtDate > deadline) return 2
-    return 1
-}
 
 const generateRank = (fullData) => {
     let finalData = []
@@ -164,10 +160,7 @@ const generateRank = (fullData) => {
             (data) => data.user_name === eachPrData.user_name
         )
 
-        const { point, difficulty } = getPoints(
-            eachPrData.labels,
-            eachPrData.phase
-        );
+        const { point, difficulty } = getPoints(eachPrData.labels)
 
         if (index === -1) {
             const userData = {
@@ -179,7 +172,6 @@ const generateRank = (fullData) => {
                     {
                         url: eachPrData.pr_url,
                         difficulty: difficulty,
-                        phase: eachPrData.phase,
                     }
                 ]
             }
@@ -190,7 +182,6 @@ const generateRank = (fullData) => {
             finalData[index].pr_urls.push({
                 url: eachPrData.pr_url,
                 difficulty: difficulty,
-                phase: eachPrData.phase
             })
         }
     })
@@ -198,33 +189,22 @@ const generateRank = (fullData) => {
     return finalData
 }
 
-const getPoints = (labelsArray, phase) => {
+
+const getPoints = (labelsArray) => {
     let point = 0, difficulty = ''
 
     labelsArray.map((label) => {
         if (label.toLowerCase().includes(levelsData.easy.toLowerCase())) {
             difficulty = levelsData.easy
-            if (phase === 1) {
-                point = 1
-            } else {
-                point = 2
-            }
+            point = 5
         }
         if (label.toLowerCase().includes(levelsData.medium.toLowerCase())) {
             difficulty = levelsData.medium
-            if (phase === 1) {
-                point = 3
-            } else {
-                point = 4
-            }
+            point = 10
         }
         if (label.toLowerCase().includes(levelsData.hard.toLowerCase())) {
             difficulty = levelsData.hard
-            if (phase === 1) {
-                point = 5
-            } else {
-                point = 8
-            }
+            point = 15
         }
     })
 
