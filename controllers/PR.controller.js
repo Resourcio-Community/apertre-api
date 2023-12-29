@@ -79,7 +79,7 @@ const getDatafromDB = async (userName) => {
     return finalData
 }
 
-let counter = 1
+let counter = 0
 
 const fetchRepoData = async (repoName) => {
     let pageCount = 1
@@ -93,9 +93,9 @@ const fetchRepoData = async (repoName) => {
             console.log(`${counter}. Fetching data for: ${repoName} and pageCount: ${pageCount}`)
             const { data } = await axios.get(reqUrl, {
                 headers: {
-                    authorization: `token ${ACCESS_TOKEN}`,
+                    Authorization: `token ${ACCESS_TOKEN}`,
                     "User-Agent": "request",
-                    Accept: "application/vnd.github.v3+json"
+                    Accept: "application/vnd.github.v3+json",
                 }
             })
 
@@ -109,7 +109,7 @@ const fetchRepoData = async (repoName) => {
                 pageAvailabe = false
             }
         } catch (error) {
-            console.error(error.message)
+            console.error(error)
             pageAvailabe = false
             process.exit(1)
         }
