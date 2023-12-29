@@ -13,11 +13,11 @@ const levelsData = {
     hard: "Hard" // 15
 }
 
-let counter, finalData = []
-
+let counter, finalData
 
 export const fetchAllData = async (req, res) => {
-    counter = 0
+    counter = 0, finalData = []
+
     for (let i = 0; i < repos.length; i++) {
         const repoName = repos[i]
         try {
@@ -40,9 +40,10 @@ export const fetchAllData = async (req, res) => {
     for (let pos = 0; pos < leaderboardData.length; pos++) {
         const currentData = leaderboardData[pos]
 
-        const { full_name } = await getDatafromDB(currentData.user_name);
+        const { full_name, linkedIn } = await getDatafromDB(currentData.user_name);
 
         currentData.full_name = full_name
+        currentData.linkedIn = linkedIn
 
         if (pos === 0) {
             currentData.rank = rank
@@ -71,11 +72,12 @@ export const fetchAllData = async (req, res) => {
 
 
 const getDatafromDB = async (userName) => {
-    let finalData = { full_name: '' }
+    let finalData = { full_name: '', linkedIn: '' }
     try {
         const data = await Mentee.findOne({ github: `https://github.com/${userName}` })
         if (data) {
             finalData.full_name = data.name
+            finalData.linkedIn = data.linkedIn
         }
     } catch (err) {
         console.error(err)
@@ -177,7 +179,7 @@ const generateRank = (fullData) => {
                 pr_urls: [
                     {
                         url: eachPrData.pr_url,
-                        difficulty: difficulty,
+                        difficulty
                     }
                 ]
             }
@@ -187,7 +189,7 @@ const generateRank = (fullData) => {
             finalData[index].total_points += point
             finalData[index].pr_urls.push({
                 url: eachPrData.pr_url,
-                difficulty: difficulty,
+                difficulty
             })
         }
     })
