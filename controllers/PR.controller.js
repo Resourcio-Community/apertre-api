@@ -6,24 +6,29 @@ import Mentee from '../db/models/Mentee.js'
 
 dotenv.config()
 
-const ACCESS_TOKEN = process.env.GH_ACCESS_TOKEN
-
 const eventLabel = "apertre"
 const levelsData = {
     easy: "Easy", // 5
     medium: "Medium", // 10
     hard: "Hard" // 15
 }
-let finalData = []
+
+let counter, finalData = []
 
 
-
-export const fetchAllData = async (req, res, next) => {
+export const fetchAllData = async (req, res) => {
+    counter = 0
     for (let i = 0; i < repos.length; i++) {
         const repoName = repos[i]
-        const data = await fetchRepoData(repoName)
-        console.log(`Completed for: ${repos[i]}`)
-        finalData = [...finalData, ...data]
+        try {
+            const data = await fetchRepoData(repoName)
+            console.log(`[[Fetching Completed -> ${repoName}]]\n\n`)
+
+            finalData = [...finalData, ...data]
+        }
+        catch (err) {
+            return res.status(500).json(err)
+        }
     }
 
     let leaderboardData = generateRank(finalData).sort((a, b) =>
@@ -72,14 +77,13 @@ const getDatafromDB = async (userName) => {
         if (data) {
             finalData.full_name = data.name
         }
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        console.error(err)
     }
 
     return finalData
 }
 
-let counter = 0
 
 const fetchRepoData = async (repoName) => {
     let pageCount = 1
@@ -90,16 +94,19 @@ const fetchRepoData = async (repoName) => {
         const reqUrl = `https://api.github.com/repos/${repoName}/pulls?state=closed&per_page=100&page=${pageCount}`
         try {
             counter++
+
             console.log(`${counter}. Fetching data for: ${repoName} and pageCount: ${pageCount}`)
+
             const { data } = await axios.get(reqUrl, {
                 headers: {
-                    Authorization: `token ${ACCESS_TOKEN}`,
-                    "User-Agent": "request",
-                    Accept: "application/vnd.github.v3+json",
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${process.env.GH_ACCESS_TOKEN}`,
+                    'X-GitHub-Api-Version': '2022-11-28',
                 }
             })
 
             console.log(`Data has been fetched for: ${repoName} and pageCount: ${pageCount}`)
+            console.log('------------------------------------------------------------------')
 
             if (data.length !== 0) {
                 const apertreData = filterApertre(data)
@@ -108,10 +115,10 @@ const fetchRepoData = async (repoName) => {
             } else {
                 pageAvailabe = false
             }
-        } catch (error) {
-            console.error(error)
+        }
+        catch (err) {
             pageAvailabe = false
-            process.exit(1)
+            throw err
         }
     }
 
@@ -120,7 +127,7 @@ const fetchRepoData = async (repoName) => {
 
 const filterApertre = (allData) => {
     let finalData = []
-    const year = '2024'
+    const year = '2023' /* change it to 2024 later */
     const apertreData = allData.filter((prData) => {
         let isApertre = false
         if (prData.merged_at) {
@@ -129,9 +136,8 @@ const filterApertre = (allData) => {
                     isApertre = true
                 }
             })
-            if (!prData.created_at.includes(year)) isApertre = false;
+            if (!prData.created_at.includes(year)) isApertre = false
         }
-
         return isApertre
     })
 
