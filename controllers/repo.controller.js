@@ -2,8 +2,10 @@ import Repo from "../db/models/Repo.js"
 import { Response } from "../utils/Response.js"
 
 export const getRepos = async (req, res) => {
+    const { page } = req.query
     try {
-        const repos = await Repo.find().select('-address -email')
+        console.log(page);
+        const repos = await Repo.find().select('-address -email').limit(9).skip(9 * page)
 
         return res.status(200).json(
             Response({
