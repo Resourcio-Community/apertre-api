@@ -34,10 +34,4 @@ export const repos =
         // "debarshee2004/web_chat_app",
         // "debarshee2004/email_webapp",
         // "debarshee2004/hr_management_app"
-
-        
-        /* Testing */
-
-        "Anushka-Bhowmick/DSA_Cpp",
-        "NabajitBhadury/my_programming_files",
     ]
