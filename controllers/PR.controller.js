@@ -129,7 +129,7 @@ const fetchRepoData = async (repoName) => {
 
 const filterApertre = (allData) => {
     let finalData = []
-    const year = '2023' /* change it to 2024 later */
+    const year = '2024' /* change it to 2024 later */
     const apertreData = allData.filter((prData) => {
         let isApertre = false
         if (prData.merged_at) {
