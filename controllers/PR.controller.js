@@ -17,7 +17,7 @@ let counter, finalData
 
 export const fetchAllData = async (req, res) => {
     counter = 0, finalData = []
-
+    console.time('Time elapsed')
     for (let i = 0; i < repos.length; i++) {
         const repoName = repos[i]
         try {
@@ -35,28 +35,32 @@ export const fetchAllData = async (req, res) => {
         a.total_points < b.total_points ? 1 : -1
     )
 
-    let rank = 1
+    let rank = 1, finalLeaderboard = []
 
     for (let pos = 0; pos < leaderboardData.length; pos++) {
         const currentData = leaderboardData[pos]
 
         const { full_name, linkedIn } = await getDatafromDB(currentData.user_name);
 
-        currentData.full_name = full_name
-        currentData.linkedIn = linkedIn
+        if (full_name !== '') {
+            currentData.full_name = full_name
+            currentData.linkedIn = linkedIn
 
-        if (pos === 0) {
-            currentData.rank = rank
-        } else {
-            const prevData = leaderboardData[pos - 1]
-            if (prevData.total_points > currentData.total_points) {
-                rank++
+            if (pos === 0) {
                 currentData.rank = rank
             } else {
-                currentData.rank = rank
+                const prevData = leaderboardData[pos - 1]
+                if (prevData.total_points > currentData.total_points) {
+                    rank++
+                    currentData.rank = rank
+                } else {
+                    currentData.rank = rank
+                }
             }
+            finalLeaderboard.push(currentData)
         }
     }
+    console.timeEnd('Time elapsed')
 
     return res.status(200).json(
         Response({
@@ -64,7 +68,7 @@ export const fetchAllData = async (req, res) => {
             message: "Leaderboard Updated.",
             data: {
                 lastUpdated: new Date(),
-                leaderboardData
+                leaderboardData: finalLeaderboard
             }
         })
     )

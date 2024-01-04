@@ -19,7 +19,7 @@ export const repos =
         "Sukrittt/Limetta",
         "Corrupteddisk/SpotifycloneWeb",
         "Sayan67/Youtube-uploader",
-        "ASHISH26940/too-good-co-clone",
+        "ASHISH26940/toogoodto",
         "rohit32999/Netflix-Sign-In-Page",
         "arnab2001/socialite",
         "bishakhne0gi/Spring-Crud",
