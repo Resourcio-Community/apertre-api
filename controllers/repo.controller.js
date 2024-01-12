@@ -4,7 +4,6 @@ import { Response } from "../utils/Response.js"
 export const getRepos = async (req, res) => {
     const { limit, page } = req.query
     try {
-        console.log(page);
         const repos = await Repo.find().select('-address -email').limit(limit).skip(limit * page)
 
         return res.status(200).json(
