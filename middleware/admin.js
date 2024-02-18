@@ -10,10 +10,9 @@ export const isAdmin = async (req, res, next) => {
     //     password: admin_password
     // }
 
-    const HEADER_ADMIN_USERNAME = req.headers.username || ''
-    const HEADER_ADMIN_PASSWORD = req.headers.password || ''
+    const { username, password } = req.headers
 
-    if (HEADER_ADMIN_USERNAME === process.env.ADMIN_USERNAME && HEADER_ADMIN_PASSWORD === process.env.ADMIN_PASSWORD) {
+    if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
         next()
     }
     else {
