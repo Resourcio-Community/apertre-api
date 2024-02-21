@@ -101,7 +101,7 @@ async function createLeaderboard() {
                 leaderboardData: finalLeaderboard
             })
         }
-        process.exit()
+        await queue.close()
     }
     catch (err) {
         console.log(err)
