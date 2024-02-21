@@ -101,6 +101,7 @@ async function createLeaderboard() {
                 leaderboardData: finalLeaderboard
             })
         }
+        process.exit()
     }
     catch (err) {
         console.log(err)
@@ -121,6 +122,7 @@ async function getDatafromDB(userName) {
         }
     } catch (err) {
         console.error(err)
+        process.exit(1)
     }
 
     return finalData
