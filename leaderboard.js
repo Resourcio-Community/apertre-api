@@ -1,7 +1,9 @@
-const axios = require('axios')
-const { Queue } = require('bullmq')
-const { MongoClient } = require('mongodb')
-require('dotenv').config()
+import axios from 'axios'
+import { Queue } from 'bullmq'
+import { MongoClient } from 'mongodb'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 
 const client = new MongoClient(process.env.MONGODB_URL)
