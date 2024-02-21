@@ -1,11 +1,10 @@
-import axios from 'axios'
-import dotenv from 'dotenv'
-import { Queue } from 'bullmq'
-import { Response } from '../utils/Response.js'
-import Mentee from '../db/models/Mentee.js'
-import Repo from '../db/models/Repo.js'
+const axios = require('axios')
+const { Queue } = require('bullmq')
+const { MongoClient } = require('mongodb')
+require('dotenv').config()
 
-dotenv.config()
+
+const client = new MongoClient(process.env.MONGODB_URL)
 
 const queue = new Queue('apertre', {
     connection: {
@@ -25,15 +24,15 @@ const levelsData = {
 
 let counter, finalData
 
-export const createLeaderboard = async (req, res) => {
+async function createLeaderboard() {
     const repos = []
     counter = 0, finalData = []
 
     console.time('Time elapsed')
 
     try {
-        const allRepos = await Repo.find()
-        allRepos.map((repo) => {
+        const { data: allRepos } = await axios.get(`${process.env.SERVER_URL}/api/v1/repo/getrepos`)
+        allRepos.data.map((repo) => {
             repos.push(repo.projectLink.substring(19))
         })
     }
@@ -82,38 +81,38 @@ export const createLeaderboard = async (req, res) => {
 
     console.timeEnd('Time elapsed')
 
-    // send finalLeadeboard to redis queue
-    const job = await queue.getJob('leaderboard')
-    if (!job) {
-        await queue.add('leaderboard',
-            {
+    // Send finalLeadeboard to redis queue
+    try {
+        const job = await queue.getJob('leaderboard')
+        if (!job) {
+            await queue.add('leaderboard',
+                {
+                    lastUpdated: new Date(),
+                    leaderboardData: finalLeaderboard
+                },
+                { jobId: 'leaderboard' }
+            )
+        }
+        else {
+            await job.updateData({
                 lastUpdated: new Date(),
                 leaderboardData: finalLeaderboard
-            },
-            { jobId: 'leaderboard' }
-        )
+            })
+        }
     }
-    else {
-        await job.updateData({
-            lastUpdated: new Date(),
-            leaderboardData: finalLeaderboard
-        })
+    catch (err) {
+        console.log(err)
+        process.exit(1)
     }
-
-
-    return res.status(200).json(
-        Response({
-            isSuccess: true,
-            message: "Leaderboard Updated."
-        })
-    )
 }
 
 
-const getDatafromDB = async (userName) => {
+async function getDatafromDB(userName) {
     let finalData = { full_name: '', linkedIn: '' }
     try {
-        const data = await Mentee.findOne({ github: `https://github.com/${userName}` })
+        const db = client.db("apertre'24DB")
+        const collection = db.collection('mentees')
+        const data = await collection.findOne({ github: `https://github.com/${userName}` })
         if (data) {
             finalData.full_name = data.name
             finalData.linkedIn = data.linkedIn
@@ -126,7 +125,7 @@ const getDatafromDB = async (userName) => {
 }
 
 
-const fetchRepoData = async (repoName) => {
+async function fetchRepoData(repoName) {
     let pageCount = 1
     let pageAvailabe = true
     let allData = []
@@ -166,7 +165,7 @@ const fetchRepoData = async (repoName) => {
     return allData
 }
 
-const filterApertre = (allData) => {
+function filterApertre(allData) {
     let finalData = []
     const year = '2024' /* change it to 2024 later */
     const apertreData = allData.filter((prData) => {
@@ -199,7 +198,7 @@ const filterApertre = (allData) => {
 }
 
 
-const generateRank = (fullData) => {
+function generateRank(fullData) {
     let finalData = []
 
     fullData.map((eachPrData) => {
@@ -237,7 +236,7 @@ const generateRank = (fullData) => {
 }
 
 
-const getPoints = (labelsArray) => {
+function getPoints(labelsArray) {
     let point = 0, difficulty = ''
 
     labelsArray.map((label) => {
@@ -257,3 +256,9 @@ const getPoints = (labelsArray) => {
 
     return { point, difficulty }
 }
+
+
+
+client.connect()
+    .then(() => createLeaderboard().then(() => client.close()))
+    .catch((err) => console.error(err.message))

@@ -23,7 +23,6 @@ app.use(morgan('tiny'))
 app.use('/api/v1/mentor', mentorRoute)
 app.use('/api/v1/mentee', menteeRoute)
 app.use('/api/v1/repo', repoRoute)
-app.use('/api/v1/pr', prRoute)
 
 
 const port = process.env.PORT || 3000

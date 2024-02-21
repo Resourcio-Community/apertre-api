@@ -19,16 +19,11 @@ jobs:
           node-version: 18
 
       - run: yarn install
-      - run: yarn start
+      - run: yarn generate:leaderboard
         env:
-          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
-          PORT: ${{ secrets.PORT }}
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-
-      - name: Update Leaderboard
-        run: curl http://localhost:${{secrets.PORT}}/api/v1/pr/leaderboard
+          SERVER_URL: ${{ secrets.SERVER_URL }}
