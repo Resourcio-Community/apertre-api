@@ -2,7 +2,6 @@ name: Cron Job
 
 on:
   schedule:
-    # At every 4 hours
     - cron: "*/10 * * * *"
 
 
