@@ -2,11 +2,11 @@
   "name": "apertre-api",
   "version": "1.0.0",
   "description": "",
-  "main": "api/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node api/index",
-    "start:dev": "nodemon index",
+    "start:dev": "nodemon api/index",
     "generate:leaderboard": "node leaderboard.js"
   },
   "keywords": [],
