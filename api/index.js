@@ -19,6 +19,7 @@ app.use(cors({ origin: '*' }))
 app.use(express.json())
 app.use(morgan('tiny'))
 
+app.get('/', (req, res) => res.json('Apertre Server 🚀'))
 
 app.use('/api/v1/mentor', mentorRoute)
 app.use('/api/v1/mentee', menteeRoute)
