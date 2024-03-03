@@ -14,6 +14,7 @@ dotenv.config()
 const app = express()
 
 mongoose.set('strictQuery', true)
+
 app.use(cors({ origin: '*' }))
 app.use(express.json())
 app.use(morgan('tiny'))
