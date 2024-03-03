@@ -1,9 +1,10 @@
 {
   "name": "apertre-api",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "main": "index.js",
   "type": "module",
+  "licenses": [],
   "scripts": {
     "start": "node api/index",
     "start:dev": "nodemon api/index",
