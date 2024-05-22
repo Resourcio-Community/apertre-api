@@ -2,21 +2,21 @@ name: Cron Job
 
 on:
   schedule:
+    # At every 4 hours
     - cron: "*/10 * * * *"
+    # - cron: "0 */4 * * *"
 
 
 jobs:
   fetch:
-    name: UpdateLeaderBoard
+    name: Update LeaderBoard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: 18
-
       - run: yarn install
       - run: yarn generate:leaderboard
         env:
@@ -26,3 +26,16 @@ jobs:
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
+
+  trigger:
+    needs: fetch
+    name: Trigger another workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: Resourcio-Community
+          repo: apertre
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+          workflow_file_name: main.yml
+
