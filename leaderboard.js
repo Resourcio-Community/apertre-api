@@ -101,6 +101,7 @@ async function createLeaderboard() {
                 leaderboardData: finalLeaderboard
             })
         }
+        console.log(`Leaderboard updated to Redis at ${new Date()}`);
     }
     catch (err) {
         console.error(err)
