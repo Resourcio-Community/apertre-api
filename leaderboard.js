@@ -1,10 +1,8 @@
-import axios from 'axios'
 import { Queue } from 'bullmq'
 import { MongoClient } from 'mongodb'
 import dotenv from 'dotenv'
 
 dotenv.config()
-
 
 const client = new MongoClient(process.env.MONGODB_URL)
 
@@ -33,7 +31,13 @@ async function createLeaderboard() {
     console.time('Time elapsed')
 
     try {
-        const { data: allRepos } = await axios.get(`${process.env.SERVER_URL}/api/v1/repo/getrepos`)
+        const response = await fetch(`${process.env.SERVER_URL}/api/v1/repo/getrepos`)
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`)
+        }
+
+        const allRepos = await response.json()
         allRepos.data.map((repo) => {
             repos.push(repo.projectLink.substring(19))
         })
@@ -42,6 +46,7 @@ async function createLeaderboard() {
         console.error(err)
         process.exit(1)
     }
+
 
     for (let i = 0; i < repos.length; i++) {
         const repoName = repos[i]
