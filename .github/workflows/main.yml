@@ -2,7 +2,6 @@ name: Cron Job
 
 on:
   schedule:
-    # At every 4 hours
     - cron: "0 */4 * * *"
 
 jobs:
@@ -10,13 +9,13 @@ jobs:
     name: Update LeaderBoard
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js 18.x
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4.1.7
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.3
         with:
-          node-version: 18
-      - run: yarn install
-      - run: yarn generate:leaderboard
+          node-version: 20
+      - run: npm install
+      - run: npm run generate:leaderboard
         env:
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
@@ -27,7 +26,7 @@ jobs:
 
   trigger:
     needs: fetch
-    name: Trigger another workflow
+    name: Trigger another workflow and wait
     runs-on: ubuntu-latest
     steps:
       - uses: convictional/trigger-workflow-and-wait@v1.6.5
@@ -36,4 +35,3 @@ jobs:
           repo: apertre
           github_token: ${{ secrets.GH_ACCESS_TOKEN }}
           workflow_file_name: main.yml
-
