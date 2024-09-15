@@ -148,7 +148,7 @@ async function fetchRepoData(repoName) {
 
             console.log(`${counter}. Fetching data for: ${repoName} and pageCount: ${pageCount}`)
 
-            const { data } = await axios.get(reqUrl, {
+            const response = await fetch(reqUrl, {
                 headers: {
                     Accept: 'application/vnd.github+json',
                     Authorization: `Bearer ${process.env.GH_ACCESS_TOKEN}`,
@@ -156,8 +156,14 @@ async function fetchRepoData(repoName) {
                 }
             })
 
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`)
+            }
+
             console.log(`Data has been fetched for: ${repoName} and pageCount: ${pageCount}`)
             console.log('------------------------------------------------------------------')
+
+            const data = await response.json()
 
             if (data.length !== 0) {
                 const apertreData = filterApertre(data)

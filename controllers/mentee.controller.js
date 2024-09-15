@@ -5,6 +5,7 @@ import { sendMail } from "../utils/mail.js"
 
 export const addMentee = async (req, res) => {
     const details = req.body
+
     try {
         // Checking if the email already exists in mentee's collection
         const existingMentee = await Mentee.findOne({ email: details.email })
@@ -71,6 +72,7 @@ export const getMentees = async (req, res) => {
 
 export const getMentee = async (req, res) => {
     const { email } = req.params
+
     try {
         const mentee = await Mentee.findOne({ email })
         return res.status(200).json(

@@ -1,8 +1,5 @@
 import nodemailer from 'nodemailer'
 import Mailgen from 'mailgen'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 
 let nodeConfig = {

@@ -1,16 +1,14 @@
 import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-
-dotenv.config()
-
-const MONGODB_URL = process.env.MONGODB_URL
 
 export async function connectDB() {
+
+    mongoose.set('strictQuery', true)
+
+    if (!process.env.MONGODB_URL) return console.log("Missing MongoDB URL")
+
     try {
-        const conn = await mongoose.connect(MONGODB_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        })
+        const conn = await mongoose.connect(process.env.MONGODB_URL)
+
         console.log(`MongoDB : ${conn.connection.host}`)
     }
     catch (err) {
