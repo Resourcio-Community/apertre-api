@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Repo {
+  id             String        @id @default(uuid())
+  maintainer     String
+  email          String
+  linkedIn       String
+  project_name   String
+  project_link   String
+  project_desc   String
+  project_domain ProjectDomain
+  techStack      String[]
+  address        String?
+}
+
+enum ProjectDomain {
+  WEB_DEVELOPMENT     @map("Web Development")
+  ANDROID_DEVELOPMENT @map("Android Development")
+  AI_ML               @map("AI/ML")
+  CYBER_SECURITY      @map("Cyber Security")
+  WEB3_BLOCKCHAIN     @map("Web3 & Blockchain")
+  WEB_FLUTTER         @map("Web + Flutter")
+}
+
+model Mentees {
+  id             String @id @default(uuid())
+  name           String
+  email          String
+  phone          String
+  linkedIn       String
+  github         String
+  college_or_org String
+  address        String
+  gender         Gender
+}
+
+model Mentors {
+  id             String @id @default(uuid())
+  name           String
+  email          String @unique
+  phone          String @unique
+  linkedIn       String @unique
+  github         String @unique
+  college_or_org String
+  address        String
+  gender         Gender
+}
+
+enum Gender {
+  Male
+  Female
+}

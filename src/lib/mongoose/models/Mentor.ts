@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import { MentorQuestions } from '../../utils/Questions.js'
+import { MentorQuestions } from '../../../utils/Questions.js'
 
 const mentorSchema = new mongoose.Schema({
     name: {
@@ -88,5 +88,5 @@ const mentorSchema = new mongoose.Schema({
     }
 )
 
-const Mentor = mongoose.model('Mentor', mentorSchema)
+const Mentor = mongoose.models.Mentor || mongoose.model('Mentor', mentorSchema)
 export default Mentor

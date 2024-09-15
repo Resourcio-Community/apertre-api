@@ -1,13 +1,20 @@
-import Repo from "../db/models/Repo.js"
-import { Response } from "../utils/Response.js"
+import { Request, Response } from "express"
+import { ApertreResponse } from "../../utils/Response"
+import Repo from "../../lib/mongoose/models/Repo"
 
-export const getRepos = async (req, res) => {
-    const { limit, page } = req.query
+
+export async function getRepos(req: Request, res: Response) {
+    //@ts-ignore
+    const limit: number = req.query.limit
+    //@ts-ignore
+    const page: number = req.query.page
+
+
     try {
         const repos = await Repo.find().select('-address -email').limit(limit).skip(limit * page)
 
         return res.status(200).json(
-            Response({
+            ApertreResponse({
                 isSuccess: true,
                 message: "Repos have been fetched.",
                 data: repos
@@ -17,25 +24,25 @@ export const getRepos = async (req, res) => {
     catch (err) {
         console.log(err)
         return res.status(500).json(
-            Response({
-                isSucess: false,
+            ApertreResponse({
+                isSuccess: false,
                 message: "Something went wrong"
             })
         )
     }
 }
 
-export const getUniqueTechStacks = async (req, res) => {
+export async function getUniqueTechStacks(req: Request, res: Response) {
     try {
         const repos = await Repo.find().select('techStack')
 
-        let techStacks = []
+        let techStacks: Array<string> = []
         repos.forEach((repo) => {
             techStacks = techStacks.concat(repo.techStack)
         })
 
         return res.status(200).json(
-            Response({
+            ApertreResponse({
                 isSuccess: true,
                 message: "Tech stacks have been fetched.",
                 data: [...new Set(techStacks)]
@@ -45,8 +52,8 @@ export const getUniqueTechStacks = async (req, res) => {
     catch (err) {
         console.log(err)
         return res.status(500).json(
-            Response({
-                isSucess: false,
+            ApertreResponse({
+                isSuccess: false,
                 message: "Something went wrong"
             })
         )

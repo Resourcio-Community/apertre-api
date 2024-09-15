@@ -1,6 +1,8 @@
-import { Response } from '../utils/Response.js'
+import { NextFunction, Request, Response } from 'express'
+import { ApertreResponse } from '../utils/Response'
 
-export const isAdmin = async (req, res, next) => {
+
+export async function isAdmin(req: Request, res: Response, next: NextFunction) {
     // Add admin username & password in the headers
     // headers: {
     //     username: admin_username
@@ -13,6 +15,9 @@ export const isAdmin = async (req, res, next) => {
         next()
     }
     else {
-        return res.status(401).json(Response({ isSuccess: false, message: 'Not authorized' }))
+        return res.status(401).json(ApertreResponse({
+            isSuccess: false,
+            message: 'Not authorized'
+        }))
     }
 }

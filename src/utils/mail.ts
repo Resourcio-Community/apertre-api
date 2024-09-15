@@ -20,7 +20,7 @@ let MailGenerator = new Mailgen({
     }
 })
 
-export const sendMail = async (name, email, isMentee = true) => {
+export async function sendMail(name: string, email: string, isMentee = true) {
     console.log(isMentee)
     let mail
 

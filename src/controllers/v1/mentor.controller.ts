@@ -1,17 +1,20 @@
-import Mentee from "../db/models/Mentee.js"
-import Mentor from "../db/models/Mentor.js"
-import { Response } from "../utils/Response.js"
-import { sendMail } from "../utils/mail.js"
+import { Request, Response } from "express"
+import { ApertreResponse } from "../../utils/Response"
+import { sendMail } from "../../utils/mail"
+import Mentor from "../../lib/mongoose/models/Mentor"
+import Mentee from "../../lib/mongoose/models/Mentee"
 
-export const addMentor = async (req, res) => {
+
+export async function addMentor(req: Request, res: Response) {
     const details = req.body
 
     try {
         // Checking if the email already exists in mentee's collection
         const existingMentee = await Mentee.findOne({ email: details.email })
+
         if (existingMentee)
             return res.status(409).json(
-                Response({
+                ApertreResponse({
                     isSuccess: false,
                     message: 'You have already registered as a Mentee'
                 })
@@ -19,19 +22,19 @@ export const addMentor = async (req, res) => {
 
         // Creating a new mentor
         await Mentor.create(details)
-        // sendMentorMail(details.email, details.name, details.projectName, details.projectLink)
         sendMail(details.name, details.email, false)
 
         return res.status(200).json(
-            Response({
+            ApertreResponse({
                 isSuccess: true,
                 message: 'You have been registered successfully as a mentor, please check your email(also spam)'
             })
         )
-    } catch (err) {
+    }
+    catch (err) {
         console.log(err)
         return res.status(500).json(
-            Response({
+            ApertreResponse({
                 isSuccess: false,
                 message: 'Something went wrong, please try again'
             })
@@ -39,20 +42,22 @@ export const addMentor = async (req, res) => {
     }
 }
 
-export const getMentors = async (req, res) => {
+export async function getMentors(req: Request, res: Response) {
     try {
         const mentors = await Mentor.find().sort({ _id: -1 })
+
         return res.status(200).json(
-            Response({
+            ApertreResponse({
                 isSuccess: true,
                 message: 'Data for all mentors has been fetched',
                 data: mentors
             })
         )
-    } catch (err) {
+    }
+    catch (err) {
         console.log(err)
         return res.status(500).json(
-            Response({
+            ApertreResponse({
                 isSuccess: false,
                 message: 'Something went wrong'
             })
@@ -60,21 +65,24 @@ export const getMentors = async (req, res) => {
     }
 }
 
-export const getMentor = async (req, res) => {
+export async function getMentor(req: Request, res: Response) {
     const { email } = req.params
+
     try {
         const mentor = await Mentor.findOne({ email })
+
         return res.status(200).json(
-            Response({
+            ApertreResponse({
                 isSuccess: true,
                 message: 'Mentor data has been fetched',
                 data: mentor
             })
         )
-    } catch (err) {
+    }
+    catch (err) {
         console.log(err)
         return res.status(500).json(
-            Response({
+            ApertreResponse({
                 isSuccess: false,
                 message: 'Something went wrong'
             })

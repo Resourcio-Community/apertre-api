@@ -1,15 +1,22 @@
+import { PrismaClient } from '@prisma/client'
 import { Queue } from 'bullmq'
-import { MongoClient } from 'mongodb'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
-const client = new MongoClient(process.env.MONGODB_URL)
+const prismaClient = new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL
+        }
+    },
+    log: ['info']
+})
 
 const queue = new Queue('apertre', {
     connection: {
         host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
+        port: parseInt(process.env.REDIS_PORT!),
         username: 'default',
         password: process.env.REDIS_PASSWORD
     }
@@ -22,10 +29,10 @@ const levelsData = {
     hard: "Hard" // 15
 }
 
-let counter, finalData
+let counter: number, finalData: any
 
 async function createLeaderboard() {
-    const repos = []
+    const repos: Array<string> = []
     counter = 0, finalData = []
 
     console.time('Time elapsed')
@@ -38,7 +45,7 @@ async function createLeaderboard() {
         }
 
         const allRepos = await response.json()
-        allRepos.data.map((repo) => {
+        allRepos.data.map((repo: any) => {
             repos.push(repo.projectLink.substring(19))
         })
     }
@@ -56,7 +63,7 @@ async function createLeaderboard() {
         finalData = [...finalData, ...data]
     }
 
-    let leaderboardData = generateRank(finalData).sort((a, b) =>
+    let leaderboardData = generateRank(finalData).sort((a: any, b: any) =>
         a.total_points < b.total_points ? 1 : -1
     )
 
@@ -117,17 +124,22 @@ async function createLeaderboard() {
 }
 
 
-async function getDatafromDB(userName) {
+async function getDatafromDB(userName: string) {
     let finalData = { full_name: '', linkedIn: '' }
+
     try {
-        const db = client.db("apertre'24DB")
-        const collection = db.collection('mentees')
-        const data = await collection.findOne({ github: `https://github.com/${userName}` })
+        const data = await prismaClient.mentees.findFirst({
+            where: {
+                github: `https://github.com/${userName}`
+            }
+        })
+
         if (data) {
             finalData.full_name = data.name
             finalData.linkedIn = data.linkedIn
         }
-    } catch (err) {
+    }
+    catch (err) {
         console.error(err)
         process.exit(1)
     }
@@ -136,10 +148,10 @@ async function getDatafromDB(userName) {
 }
 
 
-async function fetchRepoData(repoName) {
+async function fetchRepoData(repoName: string) {
     let pageCount = 1
     let pageAvailabe = true
-    let allData = []
+    let allData: any = []
 
     while (pageAvailabe) {
         const reqUrl = `https://api.github.com/repos/${repoName}/pulls?state=closed&per_page=100&page=${pageCount}`
@@ -182,13 +194,13 @@ async function fetchRepoData(repoName) {
     return allData
 }
 
-function filterApertre(allData) {
-    let finalData = []
+function filterApertre(allData: any) {
+    let finalData: any = []
     const year = '2024' /* change it to 2024 later */
-    const apertreData = allData.filter((prData) => {
+    const apertreData = allData.filter((prData: any) => {
         let isApertre = false
         if (prData.merged_at) {
-            prData.labels.map((eachLabel) => {
+            prData.labels.map((eachLabel: any) => {
                 if (eachLabel.name.toLowerCase().includes(eventLabel.toLowerCase())) {
                     isApertre = true
                 }
@@ -199,13 +211,13 @@ function filterApertre(allData) {
     })
 
     if (apertreData.length !== 0) {
-        apertreData.map((prData) => {
+        apertreData.map((prData: any) => {
             const data = {
                 user_name: prData.user.login,
                 avatar_url: prData.user.avatar_url,
                 user_url: prData.user.html_url,
                 pr_url: prData.html_url,
-                labels: prData.labels.map((labelData) => labelData.name)
+                labels: prData.labels.map((labelData: any) => labelData.name)
             }
             finalData = [...finalData, data]
         })
@@ -215,12 +227,12 @@ function filterApertre(allData) {
 }
 
 
-function generateRank(fullData) {
-    let finalData = []
+function generateRank(fullData: any) {
+    let finalData: any = []
 
-    fullData.map((eachPrData) => {
+    fullData.map((eachPrData: any) => {
         const index = finalData.findIndex(
-            (data) => data.user_name === eachPrData.user_name
+            (data: any) => data.user_name === eachPrData.user_name
         )
 
         const { point, difficulty } = getPoints(eachPrData.labels)
@@ -253,7 +265,7 @@ function generateRank(fullData) {
 }
 
 
-function getPoints(labelsArray) {
+function getPoints(labelsArray: Array<string>) {
     let point = 0, difficulty = ''
 
     labelsArray.map((label) => {
@@ -275,7 +287,6 @@ function getPoints(labelsArray) {
 }
 
 
-
-client.connect()
-    .then(() => createLeaderboard().then(() => client.close()))
+prismaClient.$connect()
+    .then(() => createLeaderboard().then(() => prismaClient.$disconnect()))
     .catch((err) => console.error(err.message))

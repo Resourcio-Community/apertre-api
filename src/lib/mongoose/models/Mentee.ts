@@ -1,11 +1,29 @@
 import mongoose from 'mongoose'
 
-const repoSchema = new mongoose.Schema({
-    maintainer: {
+import { MenteeQuestions } from '../../../utils/Questions.js'
+
+const menteeSchema = new mongoose.Schema({
+    name: {
         type: String,
         required: true
     },
+    gender: {
+        type: String,
+        default: 'Prefer not to say'
+    },
     email: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    collegeOrOrg: {
+        type: String,
+        required: true
+    },
+    github: {
         type: String,
         required: true
     },
@@ -13,35 +31,17 @@ const repoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    projectName: {
-        type: String,
+    isFirstTime: {
+        type: Boolean,
         required: true
     },
-    projectLink: {
+    question: {
+        type: String,
+        default: MenteeQuestions.question
+    },
+    answer: {
         type: String,
         required: true
-    },
-    projectDesc: {
-        type: String,
-        required: true
-    },
-    projectDomain: {
-        type: String,
-        enum: [
-            'Web Development',
-            'Android Development',
-            'AI/ML',
-            'Cyber Security',
-            'Web3 & Blockchain',
-            'Web + Flutter'
-        ]
-    },
-    techStack: {
-        type: [String],
-        required: true
-    },
-    address: {
-        type: String
     }
 },
     {
@@ -56,5 +56,5 @@ const repoSchema = new mongoose.Schema({
     }
 )
 
-const Repo = mongoose.model("Repo", repoSchema)
-export default Repo
+const Mentee = mongoose.models.Mentee || mongoose.model('Mentee', menteeSchema)
+export default Mentee
