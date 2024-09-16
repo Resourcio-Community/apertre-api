@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.mentorRoute = void 0;
+const express_1 = require("express");
+const v2_1 = require("../../controllers/v2");
+const admin_1 = require("../../middleware/admin");
+const router = (0, express_1.Router)();
+exports.mentorRoute = router;
+router.route('/').get(admin_1.isAdmin, v2_1.v2GetMentors);
+router.route('/:email').get(admin_1.isAdmin, v2_1.v2GetMentor);
+router.route('/').post(v2_1.v2AddMentor);

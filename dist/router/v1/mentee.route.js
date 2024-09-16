@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.menteeRoute = void 0;
+const express_1 = require("express");
+const admin_1 = require("../../middleware/admin");
+const v1_1 = require("../../controllers/v1");
+const router = (0, express_1.Router)();
+exports.menteeRoute = router;
+router.route('/').get(admin_1.isAdmin, v1_1.v1GetMentees);
+router.route('/:email').get(admin_1.isAdmin, v1_1.v1GetMentee);
+router.route('/').post(v1_1.v1AddMentee);

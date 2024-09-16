@@ -1,6 +1,6 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
-import express from 'express'
+import express, { Application } from 'express'
 import morgan from 'morgan'
 import { createServer } from 'node:http'
 import { v1Router, v2Router } from '../router'
@@ -9,7 +9,7 @@ import { connectDB } from '../lib/mongoose/connect'
 dotenv.config()
 
 
-const app = express()
+const app: Application = express()
 const httpServer = createServer(app)
 
 app.use(cors({ origin: '*' }))
