@@ -1,25 +1,25 @@
 import { db } from "../src/lib/config"
-import mentees from "./mentees.json"
+// import mentees from "./mentees.json"
 
 const seed = async () => {
     console.log("Seeding DB...")
 
-    for (const mentee of mentees) {
-        const res = await db.mentees.create({
-            data: {
-                name: mentee.name,
-                email: mentee.email,
-                phone: "1234567890",
-                linkedIn: "jhjagfjsgjfgshjfgjhsgfjhsgf",
-                github: mentee.github,
-                college_or_org: mentee.collegeOrOrg,
-                gender: "Male",
-                address: "Anything",
-            }
-        })
+    // for (const mentee of mentees) {
+    //     const res = await db.mentees.create({
+    //         data: {
+    //             name: mentee.name,
+    //             email: mentee.email,
+    //             phone: "1234567890",
+    //             linkedIn: "jhjagfjsgjfgshjfgjhsgfjhsgf",
+    //             github: mentee.github,
+    //             college_or_org: mentee.collegeOrOrg,
+    //             gender: "Male",
+    //             address: "Anything",
+    //         }
+    //     })
 
-        console.log("Created", res)
-    }
+    //     console.log("Created", res)
+    // }
 }
 
 seed()

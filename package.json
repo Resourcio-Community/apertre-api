@@ -6,9 +6,8 @@
   "scripts": {
     "build": "tsc -b",
     "ts.check": "tsc --project tsconfig.json",
-    "start": "node dist/api/index",
+    "start": "tsc -b && node dist/api/index",
     "postinstall": "prisma generate",
-    "dev": "tsc -b && node dist/api/index",
     "generate:leaderboard": "tsc -b && node dist/leaderboard",
     "prepare": "husky"
   },
