@@ -1,11 +1,9 @@
 {
   "name": "apertre-api",
   "version": "1.0.0",
-  "main": "index.js",
   "licenses": [],
   "scripts": {
     "build": "tsc -b",
-    "ts.check": "tsc --project tsconfig.json",
     "start": "node dist/functions/api",
     "postinstall": "prisma generate",
     "generate:leaderboard": "tsc -b && node dist/leaderboard"
@@ -17,7 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.19.1",
+    "@netlify/functions": "^2.8.1",
+    "@prisma/client": "^5.20.0",
     "bullmq": "^5.13.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -35,7 +34,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.5",
     "@types/nodemailer": "^6.4.15",
-    "prisma": "^5.19.1",
+    "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }

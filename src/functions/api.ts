@@ -24,7 +24,7 @@ router.use('/v1', v1Router)
 router.use('/v2', v2Router)
 
 
-app.use('/api', router)
+app.use('/api/', router)
 
 
 const port = process.env.PORT

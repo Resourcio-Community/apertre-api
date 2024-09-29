@@ -1,13 +1,14 @@
 [build]
-  functions = "dist/functions"
+  publish = "dist"
   command = "npm run build"
+  functions = "dist/functions"
 
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
+  directory = "dist/functions"
 
 [[redirects]]
-  to = "/.netlify/functions/api/:splat"
   from = "/api/*"
-  force = true
+  to = "/.netlify/functions/api/:splat"
   status = 200
