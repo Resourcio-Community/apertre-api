@@ -16,13 +16,15 @@ app.use(express.json())
 app.use(morgan('tiny'))
 
 
+const router = express.Router()
 
-app.get('/', (req, res) => res.json('Apertre Server 🚀'))
+router.get('/', (req, res) => res.json('Apertre Server 🚀'))
 
-app.use('/api/v1', v1Router)
-app.use('/api/v2', v2Router)
+router.use('/v1', v1Router)
+router.use('/v2', v2Router)
 
 
+app.use('/api', router)
 
 
 const port = process.env.PORT
