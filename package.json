@@ -8,8 +8,7 @@
     "ts.check": "tsc --project tsconfig.json",
     "start": "node dist/functions/api",
     "postinstall": "prisma generate",
-    "generate:leaderboard": "tsc -b && node dist/leaderboard",
-    "prepare": "husky"
+    "generate:leaderboard": "tsc -b && node dist/leaderboard"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
