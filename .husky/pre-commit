@@ -1,4 +1,0 @@
-npm run ts.check
-rm -rf dist
-npm run build
-git add dist
