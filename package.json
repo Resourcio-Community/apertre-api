@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b",
     "ts.check": "tsc --project tsconfig.json",
-    "start": "tsc -b && node dist/api/index",
+    "start": "node dist/functions/api",
     "postinstall": "prisma generate",
     "generate:leaderboard": "tsc -b && node dist/leaderboard",
     "prepare": "husky"
@@ -27,6 +27,7 @@
     "mongoose": "^8.6.2",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.15",
+    "serverless-http": "^3.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
