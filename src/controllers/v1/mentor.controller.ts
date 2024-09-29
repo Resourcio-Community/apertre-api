@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { ApertreResponse } from "../../utils/Response"
-import { sendMail } from "../../utils/mail"
+// import { sendMail } from "../../utils/mail"
 import Mentor from "../../lib/mongoose/models/Mentor"
 import Mentee from "../../lib/mongoose/models/Mentee"
 
@@ -22,7 +22,7 @@ export async function addMentor(req: Request, res: Response) {
 
         // Creating a new mentor
         await Mentor.create(details)
-        sendMail(details.name, details.email, false)
+        // sendMail(details.name, details.email, false)
 
         return res.status(200).json(
             ApertreResponse({
