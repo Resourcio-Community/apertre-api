@@ -3,8 +3,8 @@ import dotenv from 'dotenv'
 import express, { Application } from 'express'
 import morgan from 'morgan'
 import serverless from 'serverless-http'
-import { v1Router, v2Router } from '../router'
-import { connectDB } from '../lib/mongoose/connect'
+import { v1Router, v2Router } from '../../router'
+import { connectDB } from '../../lib/mongoose/connect'
 
 dotenv.config()
 
