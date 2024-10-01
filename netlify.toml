@@ -1,6 +1,3 @@
-[build]
-  functions = "dist/functions"
-
 [dev]
   functions = "dist/functions"
 
