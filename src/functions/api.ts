@@ -3,8 +3,7 @@ import dotenv from 'dotenv'
 import express, { Application } from 'express'
 import morgan from 'morgan'
 import serverless from 'serverless-http'
-import { v1Router, v2Router } from '../../router'
-import { connectDB } from '../../lib/mongoose/connect'
+import { v1Router, v2Router } from '../router'
 
 dotenv.config()
 
@@ -25,13 +24,5 @@ router.use('/v2', v2Router)
 
 
 app.use('/api/', router)
-
-
-const port = process.env.PORT
-connectDB().then(() => {
-    app.listen(port, () => {
-        console.log(`SERVER PORT : ${port}`)
-    })
-})
 
 export const handler = serverless(app)
