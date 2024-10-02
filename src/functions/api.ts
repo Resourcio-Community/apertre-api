@@ -27,5 +27,7 @@ router.use('/v2', v2Router)
 app.use('/api/', router)
 
 connectDB()
+    .then(() => console.log("Database connected"))
+    .catch((err) => console.log(err))
 
 export const handler = serverless(app)
