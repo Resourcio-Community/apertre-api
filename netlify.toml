@@ -1,6 +1,3 @@
-[build]
-  command = "prisma generate && npm run build"
-
 [dev]
   functions = "dist/functions"
 
