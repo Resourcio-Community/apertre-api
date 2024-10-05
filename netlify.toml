@@ -2,7 +2,7 @@
   functions = "dist/functions"
 
 [functions]
-  external_node_modules = ["express", "@prisma/client", ".prisma"]
+  external_node_modules = ["express"]
   node_bundler = "esbuild"
 
 [[redirects]]

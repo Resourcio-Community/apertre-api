@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/custom-client'
+import { PrismaClient } from '@prisma/client'
 import { Queue } from 'bullmq'
 import dotenv from 'dotenv'
 
