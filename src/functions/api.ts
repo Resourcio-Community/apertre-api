@@ -27,7 +27,11 @@ router.use('/v2', v2Router)
 app.use('/api/', router)
 
 connectDB()
-    .then(() => console.log("Database connected"))
+    .then(() => {
+        app.listen(8080, () => {
+            console.log(`SERVER PORT -> 8080`)
+        })
+    })
     .catch((err) => console.log(err))
 
 export const handler = serverless(app)

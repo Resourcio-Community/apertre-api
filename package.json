@@ -4,6 +4,7 @@
   "licenses": [],
   "scripts": {
     "build": "tsc -b",
+    "start": "node dist/functions/api",
     "postinstall": "prisma generate",
     "generate:leaderboard": "tsc -b && node dist/leaderboard"
   },
